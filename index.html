@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习越南语请联系Wx:XiDeYueNanYu</title>
+    <style>
+        body {
+            background-color: #f7fbf3;
+            margin-bottom: 60px;
+        }
+        #infoBox { 
+            width: 100%; 
+                        max-width: 700px;
+            height: 100px; 
+            margin: 0 auto; 
+            border: 1px solid #ccc; 
+            background: #68838B; 
+            color: #D2B48C; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: clamp(40px, 5vw, 60px);
+            font-weight: bold;
+        }
+        #contactBox { 
+            width: 100%; 
+                        max-width: 700px;
+            height: 45px; 
+            margin: 0px auto; 
+            border: 1px solid #ccc; 
+            background: #68838B; 
+            color: #D2B48C; 
+            display: flex; 
+            align-items: center; 
+            justify-content: left; 
+            padding-left: 20px;
+            font-size: clamp(12px, 2vw, 15px); 
+            font-weight: bold;
+        }
+        .content-box {
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 50px;
+            border: 10px solid #957652;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 30px;
+            font-family: Arial;
+            color: #222322;
+            line-height: 3;
+            text-align: justify;
+        }
+        .translated-word {
+            position: relative;
+            display: inline-block;
+            white-space: nowrap;
+            line-height: 1.3;
+            background-color: #bfcdbf;
+            color: #000000;
+            padding: 4px 4px;
+            border-radius: 2px;
+        }
+        .translation {
+            position: absolute;
+            top: -29px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            background-color: #eddabc;
+            color: #313a2d;
+            padding: 4px 4px;
+            border-radius: 1px;
+            white-space: nowrap;
+            z-index: 1;
+            line-height: 1;
+        }
+        .original {
+            display: inline;
+            line-height: 1;
+        }
+        .floating-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            display: block;
+            z-index: 1000;
+        }
+        #audioPlayer {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .time-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .time-box-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .floating-controls p#timeDisplay {
+            font-size: 28px;
+            color: #FFFFFF;
+            background-color: #000000;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0;
+        }
+        .floating-controls .time-box {
+            font-size: 16px;
+            color: #FFFFFF;
+            background-color: #555555;
+            padding: 5px 10px;
+            border-radius: 5px;
+            min-width: 60px;
+        }
+        .tua-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .control-button {
+            width: 50px;
+            height: 50px;
+            background-color: #363535;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .control-button:disabled {
+            background-color: #888888;
+            cursor: not-allowed;
+        }
+        .control-button:hover:not(:disabled) {
+            background-color: #000000;
+        }
+        .pause-play-button {
+            background-color: #FF4500;
+        }
+        .pause-play-button:hover {
+            background-color: #CC3700;
+        }
+        .toggle-button {
+            background-color: #4682B4;
+        }
+        .toggle-button:hover {
+            background-color: #36648B;
+        }
+        .loop-button {
+            background-color: #3c923c;
+        }
+        .loop-button:hover {
+            background-color: #347d34;
+        }
+        .clear-button {
+            background-color: #bc3f13;
+        }
+        .clear-button:hover {
+            background-color: #d15124;
+        }
+        .active {
+            background-color: #ffffff; 
+            border-radius: 5px;
+        }
+        @media (max-width: 400px) {
+            .control-button {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+            .floating-controls p#timeDisplay {
+                font-size: 20px;
+            }
+            .floating-controls .time-box {
+                font-size: 12px;
+                min-width: 50px;
+            }
+        }
+        #quizContainer {
+            display: none;
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            color: #53686f;
+            font-size: 25px;
+            font-weight: bold;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 18px;
+            color: #53686f;
+            border: 5px solid #53686f;
+            border-radius: 10px;
+            background-color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .options label {
+            display: block;
+            margin: 15px 0;
+            cursor: pointer;
+            color: #21292c;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            display: none;
+            border: 5px solid #53686f;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #ffffff;
+            color: #007a33;
+        }
+        .wrong-answer {
+            color: #f65936;
+            margin: 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #submitQuiz {
+            font-family: Arial, sans-serif;
+            padding: 10px 20px;
+            border: 3px solid #53686f;
+            background-color: #FF6820;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #submitQuiz:hover {
+            background-color: #ff844a;
+        }
+        .floating-mode-bar {
+            position: fixed;
+            bottom: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #68838B;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0px 5px rgba(0, 0, 0, 1);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 1000;
+            width: 900px;
+        }
+        .mode-button {
+            padding: 10px 20px;
+            border: 0px solid #ccc;
+            background: #95a8ad;
+            color: #293437;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+        .mode-button.active {
+            border: 2px solid #ffffff;
+            background: #f0f0f0;
+            color: #293437;
+        }
+
+
+
+
+                
+                /*-------------------------Thiet Lap Cho Di Dong-----------------------------------*/
+        @media (max-width: 768px) { 
+            body {
+            background-color: #f7fbf3;
+            margin-bottom: 60px;
+        }
+        #infoBox { 
+            width: 90%; 
+            height: 120px; 
+            margin: 0 auto; 
+            border: 1px solid #ccc; 
+            background: #68838B; 
+            color: #D2B48C; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 60px; 
+            font-weight: bold;
+        }
+        #contactBox { 
+            width: 90%; 
+            height: 50px; 
+            margin: 0px auto; 
+            border: 1px solid #ccc; 
+            background: #68838B; 
+            color: #D2B48C; 
+            display: flex; 
+            align-items: center; 
+            justify-content: left; 
+            padding-left: 20px;
+            font-size: 20px; 
+            font-weight: bold;
+        }
+        .content-box {
+            max-width: 700px;
+            margin: 10px auto;
+            padding: 20px;
+                        padding-top: 50px;
+                        padding-bottom: 90px;
+            border: 10px solid #957652;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 19px;
+            font-family: Arial;
+            color: #222322;
+            line-height: 3.5;
+            text-align: justify;
+        }
+        .translated-word {
+            position: relative;
+            display: inline-block;
+            white-space: nowrap;
+            line-height: 1.3;
+            background-color: #bfcdbf;
+            color: #000000;
+            padding: 3px 3px;
+            border-radius: 2px;
+        }
+        .translation {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 13px;
+            background-color: #eddabc;
+            color: #313a2d;
+            padding: 4px 4px;
+            border-radius: 1px;
+            white-space: nowrap;
+            z-index: 1;
+            line-height: 1;
+        }
+        .original {
+            display: inline;
+            line-height: 1;
+        }
+        .floating-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            display: block;
+            z-index: 1000;
+        }
+        #audioPlayer {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .time-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .time-box-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .floating-controls p#timeDisplay {
+            font-size: 28px;
+            color: #FFFFFF;
+            background-color: #000000;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0;
+        }
+        .floating-controls .time-box {
+            font-size: 16px;
+            color: #FFFFFF;
+            background-color: #555555;
+            padding: 5px 10px;
+            border-radius: 5px;
+            min-width: 60px;
+        }
+        .tua-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .control-button {
+            width: 50px;
+            height: 50px;
+            background-color: #363535;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .control-button:disabled {
+            background-color: #888888;
+            cursor: not-allowed;
+        }
+        .control-button:hover:not(:disabled) {
+            background-color: #000000;
+        }
+        .pause-play-button {
+            background-color: #FF4500;
+        }
+        .pause-play-button:hover {
+            background-color: #CC3700;
+        }
+        .toggle-button {
+            background-color: #4682B4;
+        }
+        .toggle-button:hover {
+            background-color: #36648B;
+        }
+        .loop-button {
+            background-color: #3c923c;
+        }
+        .loop-button:hover {
+            background-color: #347d34;
+        }
+        .clear-button {
+            background-color: #bc3f13;
+        }
+        .clear-button:hover {
+            background-color: #d15124;
+        }
+        .active {
+            background-color: #ffffff; 
+            border-radius: 5px;
+        }
+        @media (max-width: 400px) {
+            .control-button {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+            .floating-controls p#timeDisplay {
+                font-size: 20px;
+            }
+            .floating-controls .time-box {
+                font-size: 12px;
+                min-width: 50px;
+            }
+        }
+        #quizContainer {
+            display: none;
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            color: #53686f;
+            font-size: 25px;
+            font-weight: bold;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 18px;
+            color: #53686f;
+            border: 5px solid #53686f;
+            border-radius: 10px;
+            background-color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .options label {
+            display: block;
+            margin: 15px 0;
+            cursor: pointer;
+            color: #21292c;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            display: none;
+            border: 5px solid #53686f;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #ffffff;
+            color: #007a33;
+        }
+        .wrong-answer {
+            color: #f65936;
+            margin: 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #submitQuiz {
+            font-family: Arial, sans-serif;
+            padding: 10px 20px;
+            border: 3px solid #53686f;
+            background-color: #FF6820;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #submitQuiz:hover {
+            background-color: #ff844a;
+        }
+        .floating-mode-bar {
+            position: fixed;
+            bottom: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #68838B;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0px 5px rgba(0, 0, 0, 1);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 1000;
+            width: 100%;
+        }
+        .mode-button {
+            padding: 10px 20px;
+            border: 0px solid #ccc;
+            background: #95a8ad;
+            color: #293437;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+        .mode-button.active {
+            border: 2px solid #ffffff;
+            background: #f0f0f0;
+            color: #293437;
+        }
+}
+    </style>
+</head>
+<body>
+    <div id="infoBox">习得越南语</div>
+    <div id="contactBox">讲师-阮玉煌 | Weixin：XiDeYueNanYu</div>
+    <div id="contentContainer">
+        <div class="content-box" id="content"></div>
+    </div>
+    <div id="quizContainer">
+        <h1>回答下面问题</h1>
+        <form id="quizForm">
+            <div id="questions"></div>
+            <button type="button" id="submitQuiz" onclick="checkAnswers()">提交</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <div class="floating-controls" id="floatingControls">
+        <audio id="audioPlayer" src="lesson.mp3" controls></audio>
+        <div class="time-row">
+            <p id="timeDisplay">00:00</p>
+            <div class="time-box-group">
+                <span class="time-box" id="loopStart">--:--</span>
+                <span class="time-box" id="loopEnd">--:--</span>
+            </div>
+            <div class="button-group">
+                <button class="control-button loop-button" id="loopButton">听</button>
+                <button class="control-button clear-button" id="clearButton">删</button>
+            </div>
+        </div>
+        <div class="tua-buttons">
+            <button class="control-button" id="rewind5sButton">-5s</button>
+            <button class="control-button" id="rewind1sButton">-1s</button>
+            <button class="control-button" id="forward1sButton">+1s</button>
+            <button class="control-button" id="forward5sButton">+5s</button>
+        </div>
+        <div class="action-buttons">
+            <button class="control-button pause-play-button" id="pausePlayButton">播</button>
+            <button class="control-button toggle-button" id="toggleControlsButton">藏</button>
+        </div>
+    </div>
+    <div class="floating-mode-bar">
+        <button class="mode-button active" id="contentMode">内容</button>
+        <button class="mode-button" id="quizMode">回答问题</button>
+    </div>
+
+    <script>
+
+const textContentData = [
+    `Ngành du lịch Việt Nam tăng trưởng mạnh, thu hút hàng triệu lượt khách quốc tế.
+Trong nửa đầu năm 2025, ngành du lịch Việt Nam đã chứng kiến sự tăng trưởng ấn tượng khi lượng khách quốc tế đạt xấp xỉ 10,7 triệu lượt, tăng 20,7% so với cùng kỳ năm trước. Dữ liệu do Tổng cục Thống kê công bố cho thấy, riêng trong tháng 6, số khách quốc tế đến nước ta đạt 1,46 triệu lượt, tuy giảm nhẹ 4,3% so với tháng trước nhưng vẫn tăng 17,1% so với cùng kỳ năm 2024. Những con số này phần nào phản ánh sự phục hồi mạnh mẽ và xu hướng tích cực của thị trường du lịch inbound.
+    Xét theo phương thức di chuyển, đa số khách quốc tế đến Việt Nam bằng đường hàng không với hơn 9,1 triệu lượt, chiếm 85,2% tổng lượng khách và tăng 22,7% so với năm trước. Khách đi bằng đường bộ đạt 1,4 triệu lượt, chiếm 13,1%, trong khi khách đến bằng đường biển chỉ chiếm 1,7% với khoảng 181.400 lượt, tuy vậy vẫn ghi nhận mức tăng trưởng 10%.
+   Về khu vực địa lý, châu Á tiếp tục giữ vị trí là nguồn khách quốc tế lớn nhất của Việt Nam, với hơn 8,4 triệu lượt, tăng 21,1%. Trong đó, các quốc gia thuộc khu vực Đông Bắc Á vẫn chiếm ưu thế rõ rệt, đóng góp khoảng 60% tổng số khách đến. Trung Quốc dẫn đầu với hơn 2,7 triệu lượt khách, theo sau là Hàn Quốc với trên 2,2 triệu lượt. Các thị trường đáng chú ý khác bao gồm Nhật Bản, Đài Loan, Ấn Độ và Hoa Kỳ.
+    Đối với các thị trường ngoài châu Á, lượng khách từ châu Âu đạt hơn 1,3 triệu lượt, tăng trưởng mạnh ở mức 26,5%. Trong khi đó, lượng khách từ châu Mỹ đạt gần 583.000 lượt (tăng 8,6%), châu Úc ghi nhận khoảng 304.000 lượt (tăng 14,1%), còn châu Phi đạt khoảng 25.200 lượt, giảm nhẹ 0,3%.
+   Sự tăng trưởng mạnh mẽ của ngành du lịch Việt Nam được cho là kết quả của việc triển khai đồng bộ nhiều chính sách và biện pháp kích cầu. Trong đó, chính sách thị thực linh hoạt hơn, các chương trình xúc tiến quảng bá quốc gia ở nước ngoài, cùng các hoạt động lễ hội lớn trong nước đã góp phần đáng kể trong việc thu hút du khách quốc tế.
+    Theo Báo cáo Hàn thử biểu du lịch thế giới do Tổ chức Du lịch Liên Hợp Quốc (UN Tourism) công bố vào tháng 5, Việt Nam đã dẫn đầu khu vực châu Á - Thái Bình Dương về tốc độ tăng trưởng lượng khách quốc tế trong quý I/2025, đạt mức tăng 30% so với cùng kỳ năm trước. Đặc biệt, nếu so với giai đoạn trước đại dịch, cụ thể là quý I/2019, Việt Nam là quốc gia phục hồi nhanh thứ hai trong khu vực, với mức tăng lên tới 34%. Trên bình diện toàn cầu, Việt Nam xếp thứ 6 về tăng trưởng khách quốc tế và đứng thứ 4 về tốc độ tăng doanh thu từ ngành du lịch.
+    Tại Hội nghị Chính phủ với các địa phương tổ chức ngày 3/7 vừa qua, Thủ tướng Chính phủ Phạm Minh Chính đã nhấn mạnh rằng du lịch chính là một trong mười điểm sáng nổi bật nhất của nền kinh tế trong 6 tháng đầu năm 2025. Theo Thủ tướng, ngành này đã góp phần quan trọng vào mức tăng trưởng GDP cao nhất trong cùng kỳ suốt gần hai thập kỷ qua.
+    Nhiều chuyên gia nhận định rằng, nếu ngành du lịch Việt Nam có thể hoàn thành mục tiêu đón từ 22 đến 23 triệu lượt khách quốc tế trong cả năm 2025, đồng thời nâng cao chất lượng sản phẩm và dịch vụ để khuyến khích chi tiêu du lịch, thì đây sẽ là nhân tố mũi nhọn thúc đẩy tiêu dùng nội địa. Qua đó, tiêu dùng có thể trở thành động lực chính giúp Việt Nam hiện thực hóa mục tiêu tăng trưởng GDP đạt 8% trong năm nay, và thậm chí hướng tới mức tăng trưởng hai chữ số trong những năm tiếp theo.`
+];
+const dictionary = {
+    "ngành du lịch": "旅游业",
+    "tăng trưởng": "增长",
+    "mạnh": "强劲",
+    "thu hút": "吸引",
+    "hàng triệu": "数百万",
+    "lượt khách": "人次",
+    "quốc tế": "国际",
+    "nửa đầu năm": "上半年",
+    "chứng kiến": "见证",
+    "sự tăng trưởng": "增长",
+    "ấn tượng": "印象深刻的",
+    "lượng khách": "客流量",
+    "xấp xỉ": "大约",
+    "so với": "相比",
+    "cùng kỳ": "同期",
+    "năm trước": "去年",
+    "dữ liệu": "数据",
+    "công bố": "公布",
+    "cho thấy": "显示",
+    "riêng": "单独",
+    "tuy": "虽然",
+    "giảm nhẹ": "轻微下降",
+    "nhưng": "但",
+    "vẫn": "仍然",
+    "phần nào": "某种程度上",
+    "phản ánh": "反映",
+    "sự phục hồi": "复苏",
+    "mạnh mẽ": "强劲的",
+    "xu hướng": "趋势",
+    "tích cực": "积极的",
+    "thị trường": "市场",
+    "inbound": "入境",
+    "xét theo": "根据",
+    "phương thức": "方式",
+    "di chuyển": "移动",
+    "đa số": "多数",
+    "bằng": "通过",
+    "đường hàng không": "航空",
+    "chiếm": "占",
+    "tổng lượng": "总量",
+    "đường bộ": "陆路",
+    "đường biển": "海运",
+    "chỉ": "仅",
+    "ghi nhận": "记录",
+    "mức": "水平",
+    "khu vực": "地区",
+    "địa lý": "地理",
+    "châu Á": "亚洲",
+    "tiếp tục": "继续",
+    "giữ vị trí": "保持位置",
+    "nguồn khách": "客源",
+    "lớn nhất": "最大的",
+    "trong đó": "其中",
+    "các quốc gia": "各国",
+    "thuộc": "属于",
+    "khu vực": "区域",
+    "Đông Bắc Á": "东北亚",
+    "ưu thế": "优势",
+    "rõ rệt": "明显的",
+    "đóng góp": "贡献",
+    "tổng số": "总数",
+    "dẫn đầu": "领先",
+    "theo sau": "紧随其后",
+    "đáng chú ý": "值得注意的",
+    "bao gồm": "包括",
+    "châu Âu": "欧洲",
+    "châu Mỹ": "美洲",
+    "châu Úc": "澳洲",
+    "châu Phi": "非洲",
+    "kết quả": "结果",
+    "triển khai": "实施",
+    "đồng bộ": "同步",
+    "chính sách": "政策",
+    "biện pháp": "措施",
+    "kích cầu": "刺激需求",
+    "thị thực": "签证",
+    "linh hoạt": "灵活的",
+    "xúc tiến": "促进",
+    "quảng bá": "推广",
+    "nước ngoài": "国外",
+    "hoạt động": "活动",
+    "lễ hội": "节日",
+    "góp phần": "贡献",
+    "đáng kể": "显著的",
+    "báo cáo": "报告",
+    "tốc độ": "速度",
+    "phục hồi": "恢复",
+    "nhanh": "快速",
+    "toàn cầu": "全球",
+    "xếp": "排名",
+    "doanh thu": "收入",
+    "hội nghị": "会议",
+    "chính phủ": "政府",
+    "địa phương": "地方",
+    "nhấn mạnh": "强调",
+    "điểm sáng": "亮点",
+    "nổi bật": "突出的",
+    "nền kinh tế": "经济",
+    "GDP": "国内生产总值",
+    "chuyên gia": "专家",
+    "nhận định": "认为",
+    "mục tiêu": "目标",
+    "đón": "接待",
+    "nâng cao": "提高",
+    "chất lượng": "质量",
+    "sản phẩm": "产品",
+    "dịch vụ": "服务",
+    "khuyến khích": "鼓励",
+    "chi tiêu": "消费",
+    "nhân tố": "因素",
+    "mũi nhọn": "先锋",
+    "thúc đẩy": "推动",
+    "tiêu dùng": "消费",
+    "nội địa": "国内",
+    "động lực": "动力",
+    "chính": "主要",
+    "hiện thực hóa": "实现",
+    "hướng tới": "朝向",
+    "hai chữ số": "两位数"
+};
+const quizData = [
+    {
+        question: "Theo bài đọc, yếu tố nào sau đây được cho là đóng vai trò quan trọng nhất giúp tăng trưởng lượng khách quốc tế trong năm 2025?",
+        options: ["Giá vé máy bay giảm", "Chính sách thị thực linh hoạt và các chương trình quảng bá", "Cơ sở hạ tầng hàng không được cải thiện", "Khách sạn và dịch vụ lưu trú giá rẻ"],
+        correct: "Chính sách thị thực linh hoạt và các chương trình quảng bá"
+    },
+    {
+        question: "Dữ liệu nào sau đây không đúng với thông tin trong bài?",
+        options: ["Số lượng khách quốc tế trong tháng 6/2025 giảm nhẹ so với tháng trước", "Trung Quốc là quốc gia có số khách đến Việt Nam nhiều nhất", "Châu Âu là thị trường lớn thứ hai sau châu Á về lượng khách quốc tế", "Lượng khách từ châu Phi tăng nhẹ so với năm trước"],
+        correct: "Lượng khách từ châu Phi tăng nhẹ so với năm trước"
+    },
+    {
+        question: "Tỷ lệ khách quốc tế đến Việt Nam bằng đường hàng không là:",
+        options: ["91,2%", "85,2%", "80,4%", "88,7%"],
+        correct: "85,2%"
+    },
+    {
+        question: "Theo bài, Việt Nam xếp hạng mấy toàn cầu về tốc độ tăng trưởng khách quốc tế trong quý I/2025?",
+        options: ["4", "5", "6", "7"],
+        correct: "6"
+    },
+    {
+        question: "Tuyên bố nào sau đây được Thủ tướng Phạm Minh Chính đưa ra?",
+        options: ["Du lịch đóng góp nhiều nhất vào GDP 6 tháng đầu năm", "Du lịch là một trong mười điểm sáng nổi bật của kinh tế", "Ngành du lịch có khả năng vượt mốc 25 triệu khách trong năm", "Việt Nam cần tái cấu trúc thị trường du lịch"],
+        correct: "Du lịch là một trong mười điểm sáng nổi bật của kinh tế"
+    },
+    {
+        question: "Phát biểu nào sau đây phản ánh đúng nội dung đoạn cuối bài?",
+        options: ["Việt Nam đã đạt mục tiêu đón 23 triệu khách quốc tế", "Tiêu dùng nội địa có thể trở thành động lực chính thúc đẩy tăng trưởng", "Doanh thu du lịch hiện tại vẫn chưa ảnh hưởng rõ đến GDP", "Việt Nam đặt mục tiêu duy trì mức tăng trưởng 6–7% trong dài hạn"],
+        correct: "Tiêu dùng nội địa có thể trở thành động lực chính thúc đẩy tăng trưởng"
+    },
+    {
+        question: "Thông tin nào sau đây là suy luận hợp lý từ bài đọc?",
+        options: ["Châu Mỹ sẽ vượt châu Âu về lượng khách trong năm tới", "Sự phục hồi du lịch gắn liền với tăng trưởng GDP quốc gia", "Khách đi bằng đường biển có tốc độ tăng trưởng cao nhất", "Việt Nam nên giảm phụ thuộc vào khách từ Đông Bắc Á"],
+        correct: "Sự phục hồi du lịch gắn liền với tăng trưởng GDP quốc gia"
+    },
+    {
+        question: "Theo bài, lý do chính khiến việc sử dụng thị thực linh hoạt có ảnh hưởng lớn đến tăng trưởng du lịch là vì:",
+        options: ["Du khách có thể đăng ký trực tuyến dễ dàng hơn", "Giúp tăng khả năng cạnh tranh so với các nước khác", "Tăng số lượng khách quay trở lại", "Giảm chi phí vận hành cho ngành du lịch"],
+        correct: "Giúp tăng khả năng cạnh tranh so với các nước khác"
+    },
+    {
+        question: "Câu nào sau đây gần nhất với ý nghĩa của “nhân tố mũi nhọn” trong đoạn cuối?",
+        options: ["Một lĩnh vực cần cải cách", "Một ngành đang xuống dốc", "Một lực đẩy chủ đạo của nền kinh tế", "Một lĩnh vực bị bỏ quên"],
+        correct: "Một lực đẩy chủ đạo của nền kinh tế"
+    },
+    {
+        question: "Lượng khách đến bằng đường biển được mô tả trong bài như thế nào?",
+        options: ["Dù nhỏ nhưng vẫn tăng trưởng 10%", "Là phương thức phổ biến thứ hai", "Có tốc độ tăng trưởng cao nhất trong ba phương thức", "Giảm nhẹ do thiếu cảng du lịch hiện đại"],
+        correct: "Dù nhỏ nhưng vẫn tăng trưởng 10%"
+    },
+    {
+        question: "So với quý I/2019, lượng khách quốc tế đến Việt Nam trong quý I/2025:",
+        options: ["Tăng 30%", "Tăng 34%", "Giảm 34%", "Giữ nguyên"],
+        correct: "Tăng 34%"
+    },
+    {
+        question: "Câu nào sau đây phản ánh đúng xu hướng du lịch inbound của Việt Nam trong nửa đầu 2025?",
+        options: ["Tăng trưởng không đều giữa các khu vực địa lý", "Số lượng khách chủ yếu đến từ các nước châu Phi và châu Mỹ", "Du lịch inbound chưa phục hồi về mức trước đại dịch", "Du lịch inbound tăng trưởng ổn định và đồng đều"],
+        correct: "Tăng trưởng không đều giữa các khu vực địa lý"
+    }
+];
+                
+        // Xử lý hiển thị văn bản với từ điển
+        const content = document.getElementById('content');
+        function renderText() {
+            let html = textContentData[0].replace(/\n/g, "<br>");
+            const sortedKeys = Object.keys(dictionary).sort((a, b) => b.length - a.length);
+            sortedKeys.forEach(key => {
+                const regex = new RegExp(`(^|\\s|[.,])(${key})(\\s|[.,]|$)`, 'g');
+                html = html.replace(regex, `$1<span class="translated-word"><span class="translation">${dictionary[key]}</span><span class="original">$2</span></span>$3`);
+            });
+            content.innerHTML = html;
+        }
+
+        // Gọi hàm renderText khi khởi tạo
+        renderText();
+
+        // Xử lý audio và bảng điều khiển
+        const audioPlayer = document.getElementById("audioPlayer");
+        const floatingControls = document.getElementById("floatingControls");
+        const timeDisplay = floatingControls.querySelector("#timeDisplay");
+        const loopStart = floatingControls.querySelector("#loopStart");
+        const loopEnd = floatingControls.querySelector("#loopEnd");
+        const loopButton = floatingControls.querySelector("#loopButton");
+        const clearButton = floatingControls.querySelector("#clearButton");
+        const rewind5sButton = floatingControls.querySelector("#rewind5sButton");
+        const rewind1sButton = floatingControls.querySelector("#rewind1sButton");
+        const forward1sButton = floatingControls.querySelector("#forward1sButton");
+        const forward5sButton = floatingControls.querySelector("#forward5sButton");
+        const pausePlayButton = floatingControls.querySelector("#pausePlayButton");
+        const toggleControlsButton = floatingControls.querySelector("#toggleControlsButton");
+        const tuaButtons = floatingControls.querySelector(".tua-buttons");
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimeDisplay(displayElement) {
+            displayElement.textContent = formatTime(audioPlayer.currentTime);
+        }
+
+        let customLoopStart = null;
+        let customLoopEnd = null;
+        let clickCount = 0;
+        let isLooping = false;
+
+        const updateInterval = setInterval(() => updateTimeDisplay(timeDisplay), 1000);
+
+        audioPlayer.ontimeupdate = function() {
+            updateTimeDisplay(timeDisplay);
+            if (isLooping && customLoopStart !== null && customLoopEnd !== null) {
+                if (audioPlayer.currentTime >= customLoopEnd) {
+                    audioPlayer.currentTime = customLoopStart;
+                }
+            }
+        };
+
+        timeDisplay.onclick = () => {
+            if (audioPlayer.paused) {
+                clickCount++;
+                if (clickCount === 1) {
+                    customLoopStart = audioPlayer.currentTime;
+                    loopStart.textContent = formatTime(customLoopStart);
+                } else if (clickCount === 2) {
+                    customLoopEnd = audioPlayer.currentTime;
+                    if (customLoopEnd <= customLoopStart) {
+                        customLoopEnd = null;
+                        loopEnd.textContent = "--:--";
+                    } else {
+                        loopEnd.textContent = formatTime(customLoopEnd);
+                    }
+                    clickCount = 0;
+                }
+            }
+        };
+
+        rewind5sButton.onclick = () => {
+            if (!isLooping) {
+                audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 5);
+                updateTimeDisplay(timeDisplay);
+            }
+        };
+        rewind1sButton.onclick = () => {
+            if (!isLooping) {
+                audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 1);
+                updateTimeDisplay(timeDisplay);
+            }
+        };
+        forward1sButton.onclick = () => {
+            if (!isLooping) {
+                audioPlayer.currentTime = Math.min(audioPlayer.duration, audioPlayer.currentTime + 1);
+                updateTimeDisplay(timeDisplay);
+            }
+        };
+        forward5sButton.onclick = () => {
+            if (!isLooping) {
+                audioPlayer.currentTime = Math.min(audioPlayer.duration, audioPlayer.currentTime + 5);
+                updateTimeDisplay(timeDisplay);
+            }
+        };
+
+        pausePlayButton.onclick = () => {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                pausePlayButton.textContent = "停";
+            } else {
+                audioPlayer.pause();
+                pausePlayButton.textContent = "播";
+            }
+        };
+
+        loopButton.onclick = () => {
+            if (customLoopStart !== null && customLoopEnd !== null) {
+                audioPlayer.currentTime = customLoopStart;
+                audioPlayer.play();
+                isLooping = true;
+                rewind5sButton.disabled = true;
+                rewind1sButton.disabled = true;
+                forward1sButton.disabled = true;
+                forward5sButton.disabled = true;
+            }
+        };
+
+        clearButton.onclick = () => {
+            customLoopStart = null;
+            customLoopEnd = null;
+            loopStart.textContent = "--:--";
+            loopEnd.textContent = "--:--";
+            clickCount = 0;
+            isLooping = false;
+            rewind5sButton.disabled = false;
+            rewind1sButton.disabled = false;
+            forward1sButton.disabled = false;
+            forward5sButton.disabled = false;
+        };
+
+        let controlsVisible = true;
+        toggleControlsButton.onclick = () => {
+            if (controlsVisible) {
+                timeDisplay.style.display = "none";
+                tuaButtons.style.display = "none";
+                pausePlayButton.style.display = "none";
+                loopStart.style.display = "none";
+                loopEnd.style.display = "none";
+                loopButton.style.display = "none";
+                clearButton.style.display = "none";
+                toggleControlsButton.textContent = "示";
+                controlsVisible = false;
+            } else {
+                timeDisplay.style.display = "inline-block";
+                tuaButtons.style.display = "flex";
+                pausePlayButton.style.display = "inline-flex";
+                loopStart.style.display = "inline-block";
+                loopEnd.style.display = "inline-block";
+                loopButton.style.display = "inline-flex";
+                clearButton.style.display = "inline-flex";
+                toggleControlsButton.textContent = "藏";
+                controlsVisible = true;
+            }
+        };
+
+        audioPlayer.onpause = audioPlayer.onended = function() {
+            pausePlayButton.textContent = "播";
+        };
+
+
+        // Biến lưu trữ vị trí cuộn và lựa chọn
+        let contentScrollPosition = 0;
+        let quizScrollPosition = 0;
+        let userSelections = {};
+        let isSubmitted = false;
+
+        // Hiển thị câu hỏi và khôi phục lựa chọn
+        function loadQuiz() {
+            const questionsDiv = document.getElementById('questions');
+            questionsDiv.innerHTML = '';
+            quizData.forEach((item, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                
+                const questionTitle = document.createElement('h3');
+                questionTitle.textContent = `Câu ${index + 1}: ${item.question}`;
+                questionDiv.appendChild(questionTitle);
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+                
+                item.options.forEach(option => {
+                    const label = document.createElement('label');
+                    const isChecked = userSelections[`question${index}`] === option ? 'checked' : '';
+                    label.innerHTML = `
+                        <input type="radio" name="question${index}" value="${option}" ${isChecked}>
+                        ${option}
+                    `;
+                    optionsDiv.appendChild(label);
+                });
+
+                questionDiv.appendChild(optionsDiv);
+                questionsDiv.appendChild(questionDiv);
+            });
+
+            // Khôi phục vị trí cuộn
+            window.scrollTo(0, quizScrollPosition);
+        }
+
+        // Lưu lựa chọn của người dùng
+        function saveSelections() {
+            quizData.forEach((_, index) => {
+                const selected = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selected) {
+                    userSelections[`question${index}`] = selected.value;
+                }
+            });
+        }
+
+        // Kiểm tra đáp án
+        function checkAnswers() {
+            let score = 0;
+            const total = quizData.length;
+            let wrongAnswers = [];
+            
+            quizData.forEach((item, index) => {
+                const selected = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selected) {
+                    if (selected.value === item.correct) {
+                        score++;
+                    } else {
+                        wrongAnswers.push({
+                            question: item.question,
+                            selected: selected.value,
+                            correct: item.correct
+                        });
+                    }
+                } else {
+                    wrongAnswers.push({
+                        question: item.question,
+                        selected: "未选择",
+                        correct: item.correct
+                    });
+                }
+            });
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <h3>YD6-结果: ${score}/${total} 答案正确</h3>
+                <p>比例: ${(score/total * 100).toFixed(2)}%</p>
+            `;
+
+            if (wrongAnswers.length > 0) {
+                resultDiv.innerHTML += '<h4>错误答案:</h4>';
+                wrongAnswers.forEach((wrong, index) => {
+                    resultDiv.innerHTML += `
+                        <div class="wrong-answer">
+                            Câu ${quizData.findIndex(q => q.question === wrong.question) + 1}: ${wrong.question}<br>
+                            你的选择: ${wrong.selected} - 正确答案: ${wrong.correct}
+                        </div>
+                    `;
+                });
+            } else {
+                resultDiv.innerHTML += '<p>回答正确所有问题</p>';
+            }
+
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+            isSubmitted = true; // Đánh dấu đã nộp bài
+        }
+
+        // Xử lý chế độ hiển thị
+        const contentModeButton = document.getElementById('contentMode');
+        const quizModeButton = document.getElementById('quizMode');
+        const contentContainer = document.getElementById('contentContainer');
+        const quizContainer = document.getElementById('quizContainer');
+
+        contentModeButton.addEventListener('click', () => {
+            // Lưu vị trí cuộn của quiz trước khi chuyển
+            quizScrollPosition = window.scrollY;
+            saveSelections(); // Lưu lựa chọn của người dùng
+            
+            contentContainer.style.display = 'block';
+            quizContainer.style.display = 'none';
+            contentModeButton.classList.add('active');
+            quizModeButton.classList.remove('active');
+            floatingControls.style.display = 'block';
+            renderText();
+            
+            // Khôi phục vị trí cuộn của content
+            window.scrollTo(0, contentScrollPosition);
+        });
+
+        quizModeButton.addEventListener('click', () => {
+            // Lưu vị trí cuộn của content trước khi chuyển
+            contentScrollPosition = window.scrollY;
+            saveSelections(); // Lưu lựa chọn của người dùng
+            
+            contentContainer.style.display = 'none';
+            quizContainer.style.display = 'block';
+            quizModeButton.classList.add('active');
+            contentModeButton.classList.remove('active');
+            floatingControls.style.display = 'none';
+            
+            // Reset lựa chọn nếu đã nộp bài
+            if (isSubmitted) {
+                userSelections = {};
+                isSubmitted = false;
+            }
+            
+            loadQuiz();
+        });
+
+        // Mặc định hiển thị nội dung
+        contentContainer.style.display = 'block';
+        quizContainer.style.display = 'none';
+    </script>
+</body>
+</html>
